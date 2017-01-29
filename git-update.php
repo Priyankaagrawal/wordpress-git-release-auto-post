@@ -87,7 +87,7 @@ else{
         <?php } else { ?>
             <form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
                 <table class='wp-list-table widefat fixed'>
-                    <tr><th>Link</th><td><input type="text" name="link" value="<?php echo $link; ?>" required/></td></tr>
+                    <tr><th class="ss-th-width">Link</th><td><input type="text" name="link" value="<?php echo $link; ?>" class="ss-field-width" required/></td></tr>
 					
 					
               <tr>
@@ -101,7 +101,8 @@ else{
                 </tr>
 				<tr>
                     <th class="ss-th-width">Categories</th>
-                    <td><?php 
+                    <td>
+					<div style="height:300px; overflow-y:auto;"><?php 
 					
 					$rows = $wpdb->get_results("select wt.term_taxonomy_id id,  w.name from wp_term_taxonomy  wt , wp_terms w where wt.term_id=w.term_id and wt.taxonomy='category'");
 					
@@ -118,7 +119,7 @@ else{
 					<?php }
 					}
 					
-?></td>
+?></div></td>
                 </tr>
 				
                 </table>

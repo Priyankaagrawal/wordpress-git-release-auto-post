@@ -7,7 +7,8 @@ function gits_link_list() {
         <h2>List</h2>
         <div class="tablenav top">
             <div class="alignleft actions">
-                <a href="<?php echo admin_url('admin.php?page=git_link_create'); ?>">Add New</a>
+                <a href="<?php echo admin_url('admin.php?page=git_link_create'); ?>" class="button button-primary">Add New Link</a>
+				<br/>
             </div>
             <br class="clear">
         </div>
@@ -19,28 +20,28 @@ function gits_link_list() {
         ?>
         <table class='wp-list-table widefat fixed striped posts'>
             <tr>
-                <th class="manage-column ss-list-width">ID</th>				
-				<th class="manage-column ss-list-width">Title</th>
-                <th class="manage-column ss-list-width">Link</th>
-				<th class="manage-column ss-list-width">Repo</th>
-				<th class="manage-column ss-list-width">Username</th>
-				<th class="manage-column ss-list-width">Tags</th>
-				<th class="manage-column ss-list-width">Created</th>
-				<th class="manage-column ss-list-width">Updated</th>
+                <th class="manage-column">ID</th>				
+				<th class="manage-column">Title</th>
+                <th class="manage-column" style="width:35%">Link</th>
+				<th class="manage-column">Repo</th>
+				<th class="manage-column">Username</th>
+				<th class="manage-column">Tags</th>
+				<th class="manage-column">Created</th>
+				<th class="manage-column">Updated</th>
                 <th>&nbsp;</th>
             </tr>
             <?php foreach ($rows as $row) { ?>
                 <tr>
-                    <td class="manage-column ss-list-width"><?php echo $row->id; ?></td>
-					<td class="manage-column ss-list-width"><?php echo $row->title; ?></td>
-                    <td class="manage-column ss-list-width"><?php echo $row->link; ?></td>
-					<td class="manage-column ss-list-width"><?php echo $row->repository; ?></td>
-					<td class="manage-column ss-list-width"><?php echo $row->username; ?></td>
-					<td class="manage-column ss-list-width"><?php echo $row->tags; ?></td>
-					<td class="manage-column ss-list-width"><?php echo $row->added_date; ?></td>
-					<td class="manage-column ss-list-width"><?php echo $row->last_modified; ?></td>
-                    <td><a href="<?php echo admin_url('admin.php?page=git_link_update&id=' . $row->id); ?>">Update</a></td>
-					 <!--<td><a href="<!?php echo admin_url('admin.php?page=get_links_api'); ?>">Api</a></td>-->
+                    <td class="manage-column "><?php echo $row->id; ?></td>
+					<td class="manage-column "><?php echo $row->title; ?></td>
+                    <td class="manage-column "><a href="<?php echo $row->link; ?>" target="_blank"><?php echo $row->link; ?></a></td>
+					<td class="manage-column "><?php echo $row->repository; ?></td>
+					<td class="manage-column "><?php echo $row->username; ?></td>
+					<td class="manage-column "><?php echo $row->tags; ?></td>
+					<td class="manage-column "><?php echo $row->added_date; ?></td>
+					<td class="manage-column "><?php echo $row->last_modified; ?></td>
+                    <td><a href="<?php echo admin_url('admin.php?page=git_link_update&id=' . $row->id); ?>">Edit</a></td>
+										 <!--<td><a href="<!?php echo admin_url('admin.php?page=get_links_api'); ?>">Api</a></td>-->
                 </tr>
             <?php } ?>
         </table>

@@ -80,7 +80,7 @@ else{
                 </tr>
 				<tr>
                     <th class="ss-th-width">Categories</th>
-                    <td><?php 
+                    <td><div style="height:300px; overflow-y:auto;"><?php 
 					
 					$rows = $wpdb->get_results("select wt.term_taxonomy_id id,  w.name from wp_term_taxonomy  wt , wp_terms w where wt.term_id=w.term_id and wt.taxonomy='category'");
 					
@@ -91,7 +91,7 @@ else{
 						<input type="checkbox" name="category_list[]" value="<?php echo $row->id; ?>"><label><?php echo $row->name; ?></label><br/>
 					<?php }
 					
-?></td>
+?></div></td>
                 </tr>
 				
             </table>
