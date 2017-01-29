@@ -16,6 +16,9 @@ function ss_options_install() {
     $sql = "CREATE TABLE $table_name (            
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
 	`link` VARCHAR(255) NOT NULL DEFAULT '0',
+	`title` VARCHAR(255) NOT NULL DEFAULT '0',
+	`category` VARCHAR(255) NOT NULL DEFAULT '0',
+	`tags` VARCHAR(255) NOT NULL DEFAULT '0',
 	`name` VARCHAR(255) NOT NULL DEFAULT '0',
 	`body` TEXT NULL,
 	`last_tag_version` VARCHAR(255) NOT NULL DEFAULT '0',

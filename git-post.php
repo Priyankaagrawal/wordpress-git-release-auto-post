@@ -22,7 +22,7 @@ function get_links_api()
         $table_name = $wpdb->prefix . "git_link";
 
         		
-	     $rows = $wpdb->get_results("SELECT id,link, repository, username, last_tag_version from $table_name");
+	     $rows = $wpdb->get_results("SELECT id,link, repository, username, last_tag_version, title, tags, category from $table_name");
        $i=0; ?>
 	   <div class="wrap">
         <h2>Git APi</h2>
@@ -30,11 +30,30 @@ function get_links_api()
 		 
 		 $output= httpGet("https://api.github.com/repos/".$row->username."/".$row->repository."/releases/latest");
    	$json_a = json_decode($output, true);
-
+    $message_url=$json_a['message'];
     $url=$json_a['url'];
     $tag=$json_a['tag_name'];
     $body=$json_a['body'];
 	  $name=$json_a['name'];
+	  
+	  if($tag=="" || $body=="")
+	  {
+		  continue;
+	  }
+	  $download="##Downloads\n";
+	  
+	  foreach ($json_a['assets'] as $item) {
+		  
+   $download=$download."[".$item['name']."](".$item['browser_download_url'] .")\n";
+}
+if($json_a['tarball_url']!="")
+{
+$download=$download."[Source code (tar.gz)](".$json_a['tarball_url'].")\n";
+}
+if($json_a['zipball_url']!="")
+{
+$download=$download."[Source code (zip)](".$json_a['zipball_url'].")\n";
+}
 	  ?>
 	  
 	   
@@ -45,7 +64,7 @@ function get_links_api()
 	<?php 
             if ($row->last_tag_version != $tag) { 	
             
-            $post_id= postCreator($row->username."-".$row->repository."-".$tag, $row->username."-".$row->repository."- ".$name, $Parsedown->text($body));
+            $post_id= postCreator($row->username."-".$row->repository."- ".$name,$row->title."-".$tag,  $Parsedown->text($body."".$download), $row->category, $row->tags);
 			
 			 $wpdb->update(
                 $table_name, //table
@@ -102,7 +121,7 @@ function httpGet($url)
 }
 
 
-function postCreator($slug, $title, $content) {
+function postCreator($slug, $title, $content, $category, $tags) {
 
 	// Initialize the page ID to -1. This indicates no action has been taken.
 	$post_id = -1;
@@ -110,6 +129,8 @@ function postCreator($slug, $title, $content) {
 	// Setup the author, slug, and title for the post
 	$author_id = 1;
 	
+$categoryArray=split ("\,", $category);
+$tagsArray=split ("\,", $tags);
 
 	// If the page doesn't already exist, then create it
 	if( null == get_page_by_title( $title ) ) {
@@ -125,6 +146,8 @@ function postCreator($slug, $title, $content) {
 				'post_status'		=>	'publish',
 				'post_type'		=>	'post',
 				'post_content'  => $content,
+				'post_category' =>  $categoryArray,
+				'tags_input'    => $tagsArray
 			)
 		);
 

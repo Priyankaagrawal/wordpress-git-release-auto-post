@@ -7,12 +7,25 @@ function git_link_update() {
     $table_name = $wpdb->prefix . "git_link";
     $id = $_GET["id"];
     $link = $_POST["link"];	
+	$tags = $_POST["tags"];
+	$title = $_POST["title"];
 	
    $pathArray = split ("\/", $link); 
   
 	
 //update
     if (isset($_POST['update'])) {
+		
+			$category = -1;
+	foreach($_POST['category_list'] as $selected){
+		if($category==-1)
+		{
+			$category=$selected;
+		}else{
+$category= $category.",".$selected;
+		}
+}
+
 		if(!(startsWith($link, "https://github.com") && (endsWith($link, "releases") || endsWith($link, "releases/"))))
 	{
 		$message.="Invalid Url";
@@ -30,10 +43,10 @@ function git_link_update() {
 else{
         $wpdb->update(
                 $table_name, //table
-                array('link' => $link, 'repository' => $repo, 'username' => $username), //data
+                array('link' => $link, 'repository' => $repo, 'username' => $username, 'title' => $title, 'tags' => $tags, 'category' => $category), //data
 				
                 array('ID' => $id), //where
-                array('%s', '%s', '%s'), //data format
+                array('%s', '%s', '%s','%s', '%s', '%s'), //data format
                 array('%s') //where format
 				
         );
@@ -47,11 +60,15 @@ else{
     else if (isset($_POST['delete'])) {
         $wpdb->query($wpdb->prepare("DELETE FROM $table_name WHERE id = %s", $id));
     } else {//selecting value to update	
-        $links = $wpdb->get_results($wpdb->prepare("SELECT id,link, repository, username from $table_name where id=%s", $id));
+        $links = $wpdb->get_results($wpdb->prepare("SELECT id,link, repository, username, category, title, tags from $table_name where id=%s", $id));
         foreach ($links as $s) {
             $link = $s->link;
 			$repo = $s->repository;
 			$username = $s->username;
+			$title = $s->title;
+			$tags = $s->tags;
+			$category = $s->category;
+			$categoryArray = split ("\,", $category); 
         }
     }
     ?>
@@ -71,8 +88,39 @@ else{
             <form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
                 <table class='wp-list-table widefat fixed'>
                     <tr><th>Link</th><td><input type="text" name="link" value="<?php echo $link; ?>" required/></td></tr>
-					<!--<tr><th>Repo</th><td><input type="text" name="repo" value="<!?php echo $repo; ?>" required/></td></tr>
-					<tr><th>Username</th><td><input type="text" name="username" value="<!?php echo $username; ?>" required/></td></tr>-->
+					
+					
+              <tr>
+                    <th class="ss-th-width">Post Title</th>
+                    <td><input type="text" name="title" value="<?php echo $title; ?>" class="ss-field-width" required/></td>
+                </tr>
+				
+                <tr>
+                    <th class="ss-th-width">Tags</th>
+                    <td><input type="text" name="tags" value="<?php echo $tags; ?>" class="ss-field-width" required/></td>
+                </tr>
+				<tr>
+                    <th class="ss-th-width">Categories</th>
+                    <td><?php 
+					
+					$rows = $wpdb->get_results("select wt.term_taxonomy_id id,  w.name from wp_term_taxonomy  wt , wp_terms w where wt.term_id=w.term_id and wt.taxonomy='category'");
+					
+					foreach($rows as $row)
+					{ 
+					
+					if (in_array($row->id, $categoryArray)) {
+						?>
+						<input type="checkbox" name="category_list[]" value="<?php echo $row->id; ?>" checked><label><?php echo $row->name; ?></label><br/>
+					<?php 
+					}else{
+					?>
+						<input type="checkbox" name="category_list[]" value="<?php echo $row->id; ?>"><label><?php echo $row->name; ?></label><br/>
+					<?php }
+					}
+					
+?></td>
+                </tr>
+				
                 </table>
                 <input type='submit' name="update" value='Save' class='button'> &nbsp;&nbsp;
                 <input type='submit' name="delete" value='Delete' class='button' onclick="return confirm('Are you sure you want to delete?')">

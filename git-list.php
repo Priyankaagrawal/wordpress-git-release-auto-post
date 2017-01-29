@@ -15,14 +15,16 @@ function gits_link_list() {
         global $wpdb;
         $table_name = $wpdb->prefix . "git_link";
 
-        $rows = $wpdb->get_results("SELECT id,link, repository, username, added_date,last_modified from $table_name");
+        $rows = $wpdb->get_results("SELECT id,link, repository, username,title, tags, added_date,last_modified from $table_name");
         ?>
         <table class='wp-list-table widefat fixed striped posts'>
             <tr>
-                <th class="manage-column ss-list-width">ID</th>
+                <th class="manage-column ss-list-width">ID</th>				
+				<th class="manage-column ss-list-width">Title</th>
                 <th class="manage-column ss-list-width">Link</th>
 				<th class="manage-column ss-list-width">Repo</th>
 				<th class="manage-column ss-list-width">Username</th>
+				<th class="manage-column ss-list-width">Tags</th>
 				<th class="manage-column ss-list-width">Created</th>
 				<th class="manage-column ss-list-width">Updated</th>
                 <th>&nbsp;</th>
@@ -30,9 +32,11 @@ function gits_link_list() {
             <?php foreach ($rows as $row) { ?>
                 <tr>
                     <td class="manage-column ss-list-width"><?php echo $row->id; ?></td>
+					<td class="manage-column ss-list-width"><?php echo $row->title; ?></td>
                     <td class="manage-column ss-list-width"><?php echo $row->link; ?></td>
 					<td class="manage-column ss-list-width"><?php echo $row->repository; ?></td>
 					<td class="manage-column ss-list-width"><?php echo $row->username; ?></td>
+					<td class="manage-column ss-list-width"><?php echo $row->tags; ?></td>
 					<td class="manage-column ss-list-width"><?php echo $row->added_date; ?></td>
 					<td class="manage-column ss-list-width"><?php echo $row->last_modified; ?></td>
                     <td><a href="<?php echo admin_url('admin.php?page=git_link_update&id=' . $row->id); ?>">Update</a></td>
