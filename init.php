@@ -13,6 +13,7 @@ function ss_options_install() {
 
     $table_name = $wpdb->prefix . "git_link";
     $charset_collate = $wpdb->get_charset_collate();
+	
     $sql = "CREATE TABLE $table_name (            
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
 	`link` VARCHAR(255) NOT NULL DEFAULT '0',
@@ -28,9 +29,18 @@ function ss_options_install() {
 	`added_date` DATETIME NULL DEFAULT NULL,
 	PRIMARY KEY (`id`)
           ) $charset_collate; ";
+		  
+		  $table_name1 = $wpdb->prefix . "git_config";
+		  $sql1="CREATE TABLE $table_name1 (            
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`last_updated` DATETIME NULL DEFAULT NULL,
+	`next_updated` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+          ) $charset_collate; ";
 
     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
     dbDelta($sql);
+	dbDelta($sql1);
 }
 
 // run the install scripts upon plugin activation

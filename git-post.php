@@ -19,6 +19,18 @@ function get_links_api()
 {
 
         global $wpdb;
+		
+		$table_name = $wpdb->prefix . "git_config";
+		 $wpdb->update(
+                $table_name, //table
+                array('last_updated' =>current_time( 'mysql' )), //data
+				
+                array('ID' => 1), //where
+                array('%s'), //data format
+                array('%s') //where format
+				
+        );
+		
         $table_name = $wpdb->prefix . "git_link";
 
         		
